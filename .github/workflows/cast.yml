@@ -1,0 +1,108 @@
+name: CAST
+
+run-name: "CAST: ${{ inputs.action || 'cycle' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        required: true
+        type: choice
+        options:
+          - cycle
+          - manager
+          - build
+          - fuzz
+          - triage
+      commit_hash:
+        required: false
+        type: string
+      archive:
+        required: false
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  manager:
+    name: CAST Manager
+    if: inputs.action == 'manager' || inputs.action == 'cycle'
+    concurrency:
+      group: cast-manager-${{ github.repository }}
+      cancel-in-progress: false
+    uses: manchester-fme/CAST/.github/workflows/manager.yml@dev-iprover
+    with:
+      solver: iprover
+      repo_url: https://gitlab.com/korovin/iprover.git
+      commit_hash: ${{ inputs.commit_hash }}
+    secrets: inherit
+
+  build:
+    name: CAST Build
+    needs: manager
+    if: |
+      always() &&
+      (
+        inputs.action == 'build' ||
+        (inputs.action == 'cycle' && needs.manager.result == 'success')
+      )
+    concurrency:
+      group: cast-cycle-${{ github.repository }}
+      cancel-in-progress: false
+    uses: manchester-fme/CAST/.github/workflows/build.yml@dev-iprover
+    with:
+      solver: iprover
+      repo_url: https://gitlab.com/korovin/iprover.git
+      build_script: iprover/.cast/build.sh
+      binary_path: iprover/iproveropt
+      commit_hash: ${{ inputs.commit_hash }}
+    secrets: inherit
+
+  fuzz:
+    name: CAST Fuzz
+    needs: build
+    if: |
+      always() &&
+      (
+        inputs.action == 'fuzz' ||
+        (inputs.action == 'cycle' && needs.build.result == 'success')
+      )
+    concurrency:
+      group: cast-cycle-${{ github.repository }}
+      cancel-in-progress: false
+    uses: manchester-fme/CAST/.github/workflows/commit-fuzzer.yml@dev-iprover
+    with:
+      solver: iprover
+      repo_url: https://gitlab.com/korovin/iprover.git
+      solver_dir: iprover/.cast
+      stop_buffer_minutes: 60
+      no_coverage: true
+    secrets: inherit
+
+  triage:
+    name: CAST Triage
+    needs: fuzz
+    if: |
+      always() &&
+      (
+        inputs.action == 'triage' ||
+        (inputs.action == 'cycle' && needs.fuzz.result == 'success')
+      )
+    concurrency:
+      group: cast-cycle-${{ github.repository }}
+      cancel-in-progress: false
+    uses: manchester-fme/CAST/.github/workflows/triage.yml@dev-iprover
+    with:
+      solver: iprover
+      repo_url: ${{ github.server_url }}/${{ github.repository }}
+      solver_dir: iprover/.cast
+      target_cmd: "./iproveropt"
+      oracle_cmd: "cvc5 --check-models --check-proofs -q"
+      archive: ${{ inputs.archive }}
+      commit_hash: ${{ inputs.commit_hash }}
+      post: false
+    secrets: inherit

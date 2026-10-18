@@ -1,0 +1,44 @@
+{
+  "coverage": {
+    "repo_url": "https://gitlab.com/korovin/iprover.git",
+    "extra_repos": [],
+    "setup_command": "sudo apt-get install opam && opam init -y && opam switch create 4.14.1+flambda --package=ocaml-variants.4.14.1+options,ocaml-option-flambda && opam install -y ocamlfind ocamlgraph zarith yojson z3 && eval $(opam env) && ./configure && make",
+    "list_tests_command": "find .cast/seeds -name '*.smt2' -printf '%P\\n' | sort",
+    "run_test_command": "./run_test.sh {test_name}",
+    "target_jobs": null,
+    "avg_test_time_seconds": null,
+    "oracle_solver": null,
+    "oracle_fetch": null
+  },
+  "fuzzer": {
+    "repo_url": "https://gitlab.com/korovin/iprover.git",
+    "extra_repos": [],
+    "extra_pip_packages": [],
+    "tests_root": ".cast/seeds",
+    "list_tests_command": "find .cast/seeds -name '*.smt2' -printf '%P\\n' | sort",
+    "target_binary_path": "./iproveropt",
+    "oracle_solver": "cvc5",
+    "oracle_fetch_fallback": {
+    "type": "github_release",
+    "repo": "cvc5/cvc5",
+    "asset_keywords": ["linux", "x86_64", "static"],
+    "binary_name": "cvc5"
+    },
+    "resources": {
+      "max_workers": null,
+      "max_jobs": 9,
+      "cpu_warning": 85.0,
+      "cpu_critical": 95.0,
+      "memory_warning_available_gb": 2.0,
+      "memory_critical_available_gb": 0.5,
+      "check_interval": 2,
+      "pause_duration": 10,
+      "max_process_memory_mb": 2048,
+      "max_process_memory_mb_warning": 1536
+    },
+    "skip_sut_clone_if_binary_cached": false,
+    "git_cleanup_dirs": ["iprover", "yinyang"],
+    "namespace_prefix": "",
+    "clang_args": []
+  }
+}
