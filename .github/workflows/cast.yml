@@ -59,7 +59,7 @@ jobs:
       solver: iprover
       repo_url: https://gitlab.com/korovin/iprover.git
       build_script: iprover/.cast/build.sh
-      binary_path: iprover/iproveropt
+      binary_path: iproveropt
       commit_hash: ${{ inputs.commit_hash }}
 
   fuzz:
