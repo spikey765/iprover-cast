@@ -38,7 +38,7 @@ echo "Configuring..."
 
 echo "Building..."
 if [[ "$ENABLE_STATIC" == "true" ]]; then
-    make STATIC=true z3=true
+    make STATIC=true z3=false
 else
     make
 fi
