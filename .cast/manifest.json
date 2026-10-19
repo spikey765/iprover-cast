@@ -4,7 +4,7 @@
     "extra_repos": [],
     "setup_command": "sudo apt-get install opam && opam init -y && opam switch create 4.14.1+flambda --package=ocaml-variants.4.14.1+options,ocaml-option-flambda && opam install -y ocamlfind ocamlgraph zarith yojson z3 && eval $(opam env) && ./configure && make",
     "list_tests_command": "find .cast/seeds -name '*.smt2' -printf '%P\\n' | sort",
-    "run_test_command": "./run_test.sh {test_name}",
+    "run_test_command": "./run_test.sh {test}",
     "target_jobs": null,
     "avg_test_time_seconds": null,
     "oracle_solver": null,
@@ -19,10 +19,14 @@
     "target_binary_path": "./iproveropt",
     "oracle_solver": "cvc5",
     "oracle_fetch_fallback": {
-    "type": "github_release",
-    "repo": "cvc5/cvc5",
-    "asset_keywords": ["linux", "x86_64", "static"],
-    "binary_name": "cvc5"
+      "type": "github_release",
+      "repo": "cvc5/cvc5",
+      "asset_keywords": [
+        "linux",
+        "x86_64",
+        "static"
+      ],
+      "binary_name": "cvc5"
     },
     "resources": {
       "max_workers": null,
@@ -37,7 +41,10 @@
       "max_process_memory_mb_warning": 1536
     },
     "skip_sut_clone_if_binary_cached": false,
-    "git_cleanup_dirs": ["iprover", "yinyang"],
+    "git_cleanup_dirs": [
+      "iprover",
+      "yinyang"
+    ],
     "namespace_prefix": "",
     "clang_args": []
   }

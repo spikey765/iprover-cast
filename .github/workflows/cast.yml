@@ -1,3 +1,4 @@
+# dev-iprover testing: manual trigger only, reusable workflows pinned to @dev-iprover.
 name: CAST
 
 run-name: "CAST: ${{ inputs.action || 'cycle' }}"
@@ -39,7 +40,7 @@ jobs:
       solver: iprover
       repo_url: https://gitlab.com/korovin/iprover.git
       commit_hash: ${{ inputs.commit_hash }}
-    secrets: inherit
+      source_extensions: ".ml,.mli,.mll,.mly"
 
   build:
     name: CAST Build
@@ -60,7 +61,6 @@ jobs:
       build_script: iprover/.cast/build.sh
       binary_path: iprover/iproveropt
       commit_hash: ${{ inputs.commit_hash }}
-    secrets: inherit
 
   fuzz:
     name: CAST Fuzz
@@ -81,7 +81,6 @@ jobs:
       solver_dir: iprover/.cast
       stop_buffer_minutes: 60
       no_coverage: true
-    secrets: inherit
 
   triage:
     name: CAST Triage
@@ -105,4 +104,3 @@ jobs:
       archive: ${{ inputs.archive }}
       commit_hash: ${{ inputs.commit_hash }}
       post: false
-    secrets: inherit
