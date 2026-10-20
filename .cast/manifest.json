@@ -8,7 +8,9 @@
     "target_jobs": null,
     "avg_test_time_seconds": null,
     "oracle_solver": null,
-    "oracle_fetch": null
+    "oracle_fetch": null,
+    "target_binary_path": "./build/iprover"
+    
   },
   "fuzzer": {
     "repo_url": "https://gitlab.com/korovin/iprover.git",
@@ -16,7 +18,7 @@
     "extra_pip_packages": [],
     "tests_root": ".cast/seeds",
     "list_tests_command": "find .cast/seeds -name '*.smt2' -printf '%P\\n' | sort",
-    "target_binary_path": "./iproveropt",
+    "target_binary_path": "./build/iprover",
     "oracle_solver": "cvc5",
     "oracle_fetch_fallback": {
       "type": "github_release",

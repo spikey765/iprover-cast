@@ -43,6 +43,9 @@ else
     make
 fi
 
+mkdir -p build
+cp iproveropt build/iprover
+
 echo "Testing iProver binary..."
 if [ -f "./iproveropt" ]; then
     ./iproveropt --version || echo "Version command completed (exit code $?)"

@@ -59,7 +59,7 @@ jobs:
       solver: iprover
       repo_url: https://gitlab.com/korovin/iprover.git
       build_script: iprover/.cast/build.sh
-      binary_path: iproveropt
+      binary_path: build/iprover
       commit_hash: ${{ inputs.commit_hash }}
 
   fuzz:
@@ -99,7 +99,7 @@ jobs:
       solver: iprover
       repo_url: ${{ github.server_url }}/${{ github.repository }}
       solver_dir: iprover/.cast
-      target_cmd: "./iproveropt"
+      target_cmd: "iprover"
       oracle_cmd: "cvc5 --check-models --check-proofs -q"
       archive: ${{ inputs.archive }}
       commit_hash: ${{ inputs.commit_hash }}
